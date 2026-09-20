@@ -59,6 +59,8 @@ a {
   display: flex;
   align-items: center;
   white-space: nowrap;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
   animation: pxMarquee 38s linear infinite;
 }
 
@@ -86,8 +88,8 @@ a {
 }
 
 @keyframes pxMarquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
 }
 
 /* ── Header Oficial ────────────────────────────────────────────────────── */
@@ -95,8 +97,7 @@ a {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: rgba(6, 6, 8, 0.94);
-  backdrop-filter: blur(12px);
+  background: #08080c;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -268,7 +269,7 @@ a {
   border: 1px solid var(--px-card-border);
   border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 35px rgba(121, 39, 205, 0.18);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
   position: relative;
 }
 
@@ -789,8 +790,7 @@ a {
 .px-modal {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.82);
-  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.88);
   z-index: 2000;
   display: none;
   align-items: center;
@@ -812,7 +812,7 @@ a {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
 }
 
 .px-modal-header {
@@ -847,6 +847,10 @@ a {
   color: rgba(255, 255, 255, 0.85);
   font-size: 14.5px;
   line-height: 1.65;
+  contain: content;
+  content-visibility: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .px-modal-body h4 {
