@@ -29,8 +29,14 @@ app.use(express.urlencoded({ extended: true, limit: '15mb' }));
 // Servir archivos estáticos de la landing page
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Ruta del archivo de registros local
-const REGISTROS_FILE = path.join(__dirname, 'data', 'registros.json');
+// Ruta del archivo de registros local con fallback para entornos serverless (Vercel)
+let REGISTROS_FILE = path.join(__dirname, 'data', 'registros.json');
+try {
+  const testDir = path.join(__dirname, 'data');
+  if (!fs.existsSync(testDir)) fs.mkdirSync(testDir, { recursive: true });
+} catch (e) {
+  REGISTROS_FILE = path.join('/tmp', 'registros.json');
+}
 
 /**
  * Lee los registros locales
@@ -38,13 +44,12 @@ const REGISTROS_FILE = path.join(__dirname, 'data', 'registros.json');
 function getRegistros() {
   try {
     if (!fs.existsSync(REGISTROS_FILE)) {
-      fs.writeFileSync(REGISTROS_FILE, JSON.stringify([], null, 2));
+      try { fs.writeFileSync(REGISTROS_FILE, JSON.stringify([], null, 2)); } catch (_) {}
       return [];
     }
     const data = fs.readFileSync(REGISTROS_FILE, 'utf-8');
     return JSON.parse(data || '[]');
   } catch (err) {
-    console.error('Error leyendo registros.json:', err.message);
     return [];
   }
 }
@@ -59,8 +64,19 @@ function saveRegistro(registro) {
     fs.writeFileSync(REGISTROS_FILE, JSON.stringify(registros, null, 2));
     return true;
   } catch (err) {
-    console.error('Error guardando en registros.json:', err.message);
-    return false;
+    try {
+      const tmpFile = path.join('/tmp', 'registros.json');
+      let list = [];
+      if (fs.existsSync(tmpFile)) {
+        list = JSON.parse(fs.readFileSync(tmpFile, 'utf8') || '[]');
+      }
+      list.push(registro);
+      fs.writeFileSync(tmpFile, JSON.stringify(list, null, 2));
+      return true;
+    } catch (errTmp) {
+      console.warn('Almacenamiento local omitido en entorno serverless.');
+      return false;
+    }
   }
 }
 
@@ -337,12 +353,16 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-// Arrancar servidor
-app.listen(PORT, () => {
-  console.log(`====================================================`);
-  console.log(`🚀 PARADOX PARK Landing Page lista en:`);
-  console.log(`👉 http://localhost:${PORT}`);
-  console.log(`📧 Remitente Resend configurado: ${RESEND_FROM}`);
-  console.log(`📬 Correo de notificaciones: ${ADMIN_EMAIL}`);
-  console.log(`====================================================`);
-});
+// Arrancar servidor solo en modo local directo (no en serverless de Vercel)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`====================================================`);
+    console.log(`🚀 PARADOX PARK Landing Page lista en:`);
+    console.log(`👉 http://localhost:${PORT}`);
+    console.log(`📧 Remitente Resend configurado: ${RESEND_FROM}`);
+    console.log(`📬 Correo de notificaciones: ${ADMIN_EMAIL}`);
+    console.log(`====================================================`);
+  });
+}
+
+module.exports = app;
