@@ -76,6 +76,21 @@ http://localhost:3001
 
 ---
 
+## ⚡ Despliegue en Vercel
+
+El proyecto cuenta con soporte nativo para Vercel mediante `vercel.json` y la función serverless en `api/index.js`.
+
+### Pasos para desplegar:
+1. Conecta tu repositorio `PARADOX-CONSENTIMIENTO-LANDING` en [Vercel Dashboard](https://vercel.com/new).
+2. En la sección **Environment Variables**, configura:
+   - `RESEND_API_KEY`: Tu API Key de Resend.
+   - `RESEND_FROM_EMAIL`: `Paradox Park <info@paradox-park.com>` (o `onboarding@resend.dev`).
+   - `ADMIN_NOTIFICATION_EMAIL`: `Hola@paradox-park.com`.
+   - `PARK_SEDE`: `Lima - Era Imperium`.
+3. Haz clic en **Deploy**. ¡Listo en 30 segundos!
+
+---
+
 ## 📁 Estructura del Proyecto
 
 ```
@@ -83,8 +98,11 @@ http://localhost:3001
 ├── .env.example               # Plantilla de configuración
 ├── .gitignore                 # Archivos excluidos del repositorio
 ├── package.json               # Dependencias y scripts de Node.js
+├── vercel.json                # Configuración de rutas para Vercel Serverless
 ├── README.md                  # Documentación del proyecto
 ├── server.js                  # Servidor Express, endpoints /api/register y /api/lookup
+├── api/
+│   └── index.js               # Handler serverless para Vercel
 ├── data/
 │   └── registros.json         # Base de datos local en JSON para respaldo
 ├── lib/
