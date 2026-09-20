@@ -213,17 +213,63 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── 5. Renderizado de Términos y Condiciones en el Modal ───────────────
   if (modalBody && typeof PARADOX_TERMINOS_Y_CONDICIONES !== 'undefined') {
     modalBody.innerHTML = '';
-    PARADOX_TERMINOS_Y_CONDICIONES.forEach((item) => {
-      const artDiv = document.createElement('div');
-      artDiv.style.marginBottom = '20px';
-      artDiv.innerHTML = `
-        <h4 style="color:#02C2FF; font-weight:800; font-size:14px; text-transform:uppercase; margin-bottom:6px;">
-          ${item.num}. ${item.titulo}
-        </h4>
-        ${item.contenido.map((p) => `<p style="margin-bottom:6px; text-align:justify;">${p}</p>`).join('')}
-      `;
-      modalBody.appendChild(artDiv);
-    });
+
+    const tc = PARADOX_TERMINOS_Y_CONDICIONES;
+
+    // Encabezado y preámbulo
+    const introDiv = document.createElement('div');
+    introDiv.style.marginBottom = '24px';
+    introDiv.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
+    introDiv.style.paddingBottom = '16px';
+    introDiv.innerHTML = `
+      <h3 style="color:#fff; font-size:16px; font-weight:800; font-style:italic; text-transform:uppercase; margin-bottom:4px;">
+        ${tc.titulo}
+      </h3>
+      <div style="color:var(--px-accent); font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:12px;">
+        ${tc.subtitulo}
+      </div>
+      <p style="font-size:14px; color:rgba(255,255,255,0.85); line-height:1.6; text-align:justify; font-style:italic;">
+        ${tc.preambulo}
+      </p>
+    `;
+    modalBody.appendChild(introDiv);
+
+    // Renderizado de cada artículo
+    if (tc.articulos && Array.isArray(tc.articulos)) {
+      tc.articulos.forEach((art) => {
+        const artDiv = document.createElement('div');
+        artDiv.style.marginBottom = '22px';
+
+        let htmlContent = `
+          <h4 style="color:#02C2FF; font-weight:800; font-size:14px; text-transform:uppercase; margin-bottom:8px; letter-spacing:0.04em;">
+            ${art.num}. ${art.titulo}
+          </h4>
+        `;
+
+        if (art.parrafos && art.parrafos.length > 0) {
+          art.parrafos.forEach((p) => {
+            htmlContent += `<p style="margin-bottom:8px; text-align:justify; font-size:14px; line-height:1.6;">${p}</p>`;
+          });
+        }
+
+        if (art.bullets && art.bullets.length > 0) {
+          htmlContent += `<ul style="margin: 8px 0 10px 24px; padding-left: 0; list-style-type: disc; color: rgba(255,255,255,0.85); font-size: 13.5px; line-height: 1.6;">`;
+          art.bullets.forEach((b) => {
+            htmlContent += `<li style="margin-bottom: 5px; text-align:justify;">${b}</li>`;
+          });
+          htmlContent += `</ul>`;
+        }
+
+        if (art.parrafos_finales && art.parrafos_finales.length > 0) {
+          art.parrafos_finales.forEach((pf) => {
+            htmlContent += `<p style="margin-bottom:8px; text-align:justify; font-size:14px; line-height:1.6;">${pf}</p>`;
+          });
+        }
+
+        artDiv.innerHTML = htmlContent;
+        modalBody.appendChild(artDiv);
+      });
+    }
   }
 
   function openModal() {

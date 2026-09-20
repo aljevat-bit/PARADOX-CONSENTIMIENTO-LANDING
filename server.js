@@ -271,8 +271,9 @@ app.post('/api/register', async (req, res) => {
         `;
 
         // 3.1 Envío al usuario
-        const resultUser = await resendClient.emails.send({
-          from: RESEND_FROM,
+        let senderUsado = RESEND_FROM;
+        let resultUser = await resendClient.emails.send({
+          from: senderUsado,
           to: [correo.trim()],
           subject: 'ACUERDO DE CONSENTIMIENTO - Paradox Park',
           html: htmlUsuario,
@@ -283,8 +284,32 @@ app.post('/api/register', async (req, res) => {
             }
           ]
         });
-        console.log('Correo al usuario enviado con ID:', resultUser.data?.id || resultUser);
-        emailStatus.sentUser = true;
+
+        // Si falla por restricción de sandbox de onboarding@resend.dev, reintentar con el dominio verificado
+        if (resultUser.error && (resultUser.error.message || '').includes('only send testing emails')) {
+          console.warn('⚠️ Detectada restricción de sandbox en Resend. Reintentando con dominio verificado info.certechperu.com...');
+          senderUsado = 'Paradox Park <hola@info.certechperu.com>';
+          resultUser = await resendClient.emails.send({
+            from: senderUsado,
+            to: [correo.trim()],
+            subject: 'ACUERDO DE CONSENTIMIENTO - Paradox Park',
+            html: htmlUsuario,
+            attachments: [
+              {
+                filename: filenamePdf,
+                content: pdfBuffer
+              }
+            ]
+          });
+        }
+
+        if (resultUser.error) {
+          console.error('❌ Error enviando correo al usuario:', resultUser.error);
+          emailStatus.userError = resultUser.error.message;
+        } else {
+          console.log('✅ Correo al usuario enviado exitosamente con ID:', resultUser.data?.id);
+          emailStatus.sentUser = true;
+        }
 
         // 3.2 Envío a administración (Hola@paradox-park.com)
         console.log(`Enviando notificación administrativa a: ${ADMIN_EMAIL}...`);
@@ -308,8 +333,8 @@ app.post('/api/register', async (req, res) => {
           </div>
         `;
 
-        const resultAdmin = await resendClient.emails.send({
-          from: RESEND_FROM,
+        let resultAdmin = await resendClient.emails.send({
+          from: senderUsado,
           to: [ADMIN_EMAIL.trim()],
           subject: `Nuevo Registro & Disclaimer: ${datosPDF.nombre_completo} - ${numero_documento}`,
           html: htmlAdmin,
@@ -320,8 +345,30 @@ app.post('/api/register', async (req, res) => {
             }
           ]
         });
-        console.log('Correo administrativo enviado con ID:', resultAdmin.data?.id || resultAdmin);
-        emailStatus.sentAdmin = true;
+
+        if (resultAdmin.error && (resultAdmin.error.message || '').includes('only send testing emails')) {
+          senderUsado = 'Paradox Park <hola@info.certechperu.com>';
+          resultAdmin = await resendClient.emails.send({
+            from: senderUsado,
+            to: [ADMIN_EMAIL.trim()],
+            subject: `Nuevo Registro & Disclaimer: ${datosPDF.nombre_completo} - ${numero_documento}`,
+            html: htmlAdmin,
+            attachments: [
+              {
+                filename: filenamePdf,
+                content: pdfBuffer
+              }
+            ]
+          });
+        }
+
+        if (resultAdmin.error) {
+          console.error('❌ Error enviando correo administrativo:', resultAdmin.error);
+          emailStatus.adminError = resultAdmin.error.message;
+        } else {
+          console.log('✅ Correo administrativo enviado exitosamente con ID:', resultAdmin.data?.id);
+          emailStatus.sentAdmin = true;
+        }
       } catch (errResend) {
         console.error('Error enviando correos con Resend:', errResend.message);
         emailStatus.details = errResend.message;
