@@ -210,7 +210,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ── 5. Renderizado de Términos y Condiciones en el Modal ───────────────
+  // ── 5. Renderizado y Aceptación Obligatoria de Términos y Condiciones ─────────
+  const btnAceptarTerminosModal = document.getElementById('btnAceptarTerminosModal');
+  const checkTerminos = document.getElementById('aceptoTerminos');
+  const tcBoxContainer = document.getElementById('tcBoxContainer');
+  const tcStatusNotice = document.getElementById('tcStatusNotice');
+  const tcAcceptedBadge = document.getElementById('tcAcceptedBadge');
+  let terminosLeidosYAceptados = false;
+
   if (modalBody && typeof PARADOX_TERMINOS_Y_CONDICIONES !== 'undefined') {
     modalBody.innerHTML = '';
 
@@ -279,6 +286,32 @@ document.addEventListener('DOMContentLoaded', () => {
     if (terminosModal) terminosModal.classList.remove('px-modal-open');
   }
 
+  // Interceptar clic en el recuadro si no han sido leídos
+  if (tcBoxContainer) {
+    tcBoxContainer.addEventListener('click', (e) => {
+      if (!terminosLeidosYAceptados && !e.target.classList.contains('open-tc-modal')) {
+        e.preventDefault();
+        openModal();
+      }
+    });
+  }
+
+  // Aceptación explícita mediante el botón en el modal
+  if (btnAceptarTerminosModal) {
+    btnAceptarTerminosModal.addEventListener('click', () => {
+      terminosLeidosYAceptados = true;
+      if (checkTerminos) {
+        checkTerminos.disabled = false;
+        checkTerminos.checked = true;
+        checkTerminos.style.cursor = 'pointer';
+        checkTerminos.style.opacity = '1';
+      }
+      if (tcStatusNotice) tcStatusNotice.style.display = 'none';
+      if (tcAcceptedBadge) tcAcceptedBadge.style.display = 'flex';
+      closeModal();
+    });
+  }
+
   openModalLinks.forEach((l) => l.addEventListener('click', (e) => { e.preventDefault(); openModal(); }));
   closeModalBtns.forEach((b) => b.addEventListener('click', closeModal));
   if (terminosModal) {
@@ -315,17 +348,17 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
+      // Validación de lectura obligatoria de términos y condiciones
+      if (!terminosLeidosYAceptados || !checkTerminos || !checkTerminos.checked) {
+        alert('Es obligatorio leer y aceptar los Términos y Condiciones Generales en su totalidad antes de enviar el formulario.');
+        openModal();
+        return;
+      }
+
       // Validación de firma digital
       if (!signaturePad || signaturePad.isEmpty()) {
         alert('Por favor dibuja tu firma digital en el recuadro blanco antes de enviar.');
         canvas.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        return;
-      }
-
-      // Validación de checkbox de términos
-      const checkTerminos = document.getElementById('aceptoTerminos');
-      if (!checkTerminos || !checkTerminos.checked) {
-        alert('Debes aceptar los Términos y Condiciones generales para continuar.');
         return;
       }
 
@@ -417,6 +450,17 @@ document.addEventListener('DOMContentLoaded', () => {
       if (signaturePad) signaturePad.clear();
       menoresContainer.innerHTML = '';
       if (antDetalleGroup) antDetalleGroup.style.display = 'none';
+
+      // Resetear estado de términos y condiciones
+      terminosLeidosYAceptados = false;
+      if (checkTerminos) {
+        checkTerminos.checked = false;
+        checkTerminos.disabled = true;
+        checkTerminos.style.cursor = 'not-allowed';
+        checkTerminos.style.opacity = '0.6';
+      }
+      if (tcStatusNotice) tcStatusNotice.style.display = 'flex';
+      if (tcAcceptedBadge) tcAcceptedBadge.style.display = 'none';
 
       successView.classList.remove('px-visible');
       formCard.style.display = 'block';

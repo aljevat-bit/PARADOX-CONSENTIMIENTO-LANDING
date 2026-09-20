@@ -6,13 +6,14 @@ require('dotenv').config();
 
 const { Resend } = require('resend');
 const { generateDisclaimerPdf } = require('./lib/pdf-generator');
+const { saveRegistro, findRegistroByDoc } = require('./lib/database');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // Configuración de Resend y Correos
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
-const RESEND_FROM = process.env.RESEND_FROM_EMAIL || 'Paradox Park <info@paradox-park.com>';
+const RESEND_FROM = process.env.RESEND_FROM_EMAIL || 'Paradox Park <hola@info.certechperu.com>';
 const ADMIN_EMAIL = process.env.ADMIN_NOTIFICATION_EMAIL || 'Hola@paradox-park.com';
 const PARK_SEDE = process.env.PARK_SEDE || 'Lima - Era Imperium';
 
@@ -29,95 +30,40 @@ app.use(express.urlencoded({ extended: true, limit: '15mb' }));
 // Servir archivos estáticos de la landing page
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Ruta del archivo de registros local con fallback para entornos serverless (Vercel)
-let REGISTROS_FILE = path.join(__dirname, 'data', 'registros.json');
-try {
-  const testDir = path.join(__dirname, 'data');
-  if (!fs.existsSync(testDir)) fs.mkdirSync(testDir, { recursive: true });
-} catch (e) {
-  REGISTROS_FILE = path.join('/tmp', 'registros.json');
-}
-
-/**
- * Lee los registros locales
- */
-function getRegistros() {
-  try {
-    if (!fs.existsSync(REGISTROS_FILE)) {
-      try { fs.writeFileSync(REGISTROS_FILE, JSON.stringify([], null, 2)); } catch (_) {}
-      return [];
-    }
-    const data = fs.readFileSync(REGISTROS_FILE, 'utf-8');
-    return JSON.parse(data || '[]');
-  } catch (err) {
-    return [];
-  }
-}
-
-/**
- * Guarda un nuevo registro localmente
- */
-function saveRegistro(registro) {
-  try {
-    const registros = getRegistros();
-    registros.push(registro);
-    fs.writeFileSync(REGISTROS_FILE, JSON.stringify(registros, null, 2));
-    return true;
-  } catch (err) {
-    try {
-      const tmpFile = path.join('/tmp', 'registros.json');
-      let list = [];
-      if (fs.existsSync(tmpFile)) {
-        list = JSON.parse(fs.readFileSync(tmpFile, 'utf8') || '[]');
-      }
-      list.push(registro);
-      fs.writeFileSync(tmpFile, JSON.stringify(list, null, 2));
-      return true;
-    } catch (errTmp) {
-      console.warn('Almacenamiento local omitido en entorno serverless.');
-      return false;
-    }
-  }
-}
-
 /**
  * Endpoint para buscar visitantes recurrentes por documento
  */
-app.get('/api/lookup', (req, res) => {
+app.get('/api/lookup', async (req, res) => {
   const { doc, tipo } = req.query;
   if (!doc) {
     return res.status(400).json({ success: false, message: 'Parámetro de documento requerido' });
   }
 
-  const registros = getRegistros();
-  const match = registros
-    .slice()
-    .reverse()
-    .find(
-      (r) =>
-        r.numero_documento &&
-        r.numero_documento.trim().toLowerCase() === doc.trim().toLowerCase() &&
-        (!tipo || (r.tipo_documento && r.tipo_documento.toLowerCase() === tipo.toLowerCase()))
-    );
+  try {
+    const match = await findRegistroByDoc(doc, tipo);
 
-  if (match) {
-    return res.json({
-      success: true,
-      found: true,
-      data: {
-        nombre_completo: match.nombre_completo,
-        tipo_documento: match.tipo_documento,
-        numero_documento: match.numero_documento,
-        correo: match.correo,
-        num_telefonico: match.num_telefonico,
-        edad: match.edad,
-        distrito: match.distrito,
-        menores: match.menores || []
-      }
-    });
+    if (match) {
+      return res.json({
+        success: true,
+        found: true,
+        data: {
+          nombre_completo: match.nombre_completo,
+          tipo_documento: match.tipo_documento,
+          numero_documento: match.numero_documento,
+          correo: match.correo,
+          num_telefonico: match.num_telefonico,
+          edad: match.edad,
+          distrito: match.distrito,
+          menores: match.menores || []
+        }
+      });
+    }
+
+    return res.json({ success: true, found: false });
+  } catch (err) {
+    console.error('Error en /api/lookup:', err);
+    return res.json({ success: true, found: false });
   }
-
-  return res.json({ success: true, found: false });
 });
 
 /**
@@ -225,7 +171,7 @@ app.post('/api/register', async (req, res) => {
       acepto_publicidad: Boolean(acepto_publicidad),
       ip: req.ip || req.headers['x-forwarded-for'] || ''
     };
-    saveRegistro(registroParaGuardar);
+    await saveRegistro(registroParaGuardar);
 
     // 3. Envío de correos vía Resend
     const filenamePdf = `disclaimer_${numero_documento}_${Date.now()}.pdf`;

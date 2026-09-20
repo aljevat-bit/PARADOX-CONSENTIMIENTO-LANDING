@@ -461,6 +461,14 @@ a {
   color: #fff;
 }
 
+.px-tc-container {
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.px-tc-container:hover {
+  border-color: rgba(2, 194, 255, 0.4) !important;
+}
+
 /* ── Sección Dinámica de Menores ───────────────────────────────────────── */
 .px-menores-wrapper {
   background: #13131a;

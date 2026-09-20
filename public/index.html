@@ -232,12 +232,22 @@
           </div>
 
           <!-- 8. ACEPTACIÓN DE TÉRMINOS Y CONDICIONES (OBLIGATORIO) -->
-          <label class="px-checkbox-label">
-            <input type="checkbox" id="aceptoTerminos" required />
-            <span>
-              He leído y acepto los <a href="#" class="open-tc-modal">Términos y Condiciones Generales</a> y el reglamento de seguridad de Paradox Park (Era Imperium). <span class="req">*</span>
-            </span>
-          </label>
+          <div class="px-tc-container" id="tcBoxContainer" style="background: #121217; padding: 18px; border-radius: 14px; border: 1.5px solid rgba(255,255,255,0.14); margin: 22px 0;">
+            <label class="px-checkbox-label" style="margin: 0; cursor: pointer;">
+              <input type="checkbox" id="aceptoTerminos" required disabled style="cursor: not-allowed; opacity: 0.6;" />
+              <span>
+                He leído y acepto los <a href="#" class="open-tc-modal" style="text-decoration: underline; color: var(--px-accent); font-weight: 800;">Términos y Condiciones Generales</a> y el reglamento de seguridad de Paradox Park (Era Imperium). <span class="req">*</span>
+              </span>
+            </label>
+            <div id="tcStatusNotice" style="margin-top: 10px; font-size: 13px; color: #f6a965; display: flex; align-items: center; gap: 8px;">
+              <i class="fa fa-info-circle"></i>
+              <span>Debes hacer clic en el enlace para abrir y leer los Términos y Condiciones completos antes de poder marcar la casilla.</span>
+            </div>
+            <div id="tcAcceptedBadge" style="margin-top: 10px; font-size: 13px; color: #00e5ff; font-weight: 700; display: none; align-items: center; gap: 8px;">
+              <i class="fa fa-check-circle"></i>
+              <span>✓ Términos y Condiciones leídos y aceptados conforme a ley.</span>
+            </div>
+          </div>
 
           <!-- 9. FIRMA DIGITAL (CANVAS) -->
           <div class="px-signature-box">
@@ -310,8 +320,11 @@
       <div class="px-modal-body" id="modalTerminosBody">
         <!-- Poblado dinámicamente con los 18 artículos de terminos-data.js -->
       </div>
-      <div class="px-modal-footer">
-        <button type="button" class="px-btn px-btn-primary close-tc-modal">Entendido y Conforme</button>
+      <div class="px-modal-footer" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <span style="font-size: 12.5px; color: rgba(255,255,255,0.6);">Al presionar el botón confirmas haber leído y comprendido los 18 artículos de Paradox Park.</span>
+        <button type="button" id="btnAceptarTerminosModal" class="px-btn px-btn-primary" style="padding: 12px 28px; font-size: 14.5px;">
+          <i class="fa fa-check-circle"></i> He leído y acepto los Términos y Condiciones
+        </button>
       </div>
     </div>
   </div>
