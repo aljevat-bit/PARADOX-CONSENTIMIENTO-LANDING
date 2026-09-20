@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es-PE">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paradox Park - Acuerdo de Consentimiento y Registro</title>
+  <meta name="description" content="Registro y acuerdo de consentimiento y responsabilidad para Paradox Park: Era Imperium Lima. El parque de experiencias inmersivas más grande de Latinoamérica." />
+  <link rel="icon" type="image/png" href="/assets/logo.png" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Estilos del Tema Paradox Park -->
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <!-- Topbar con Marquesina Continua Neón -->
+  <div class="px-topbar">
+    <div class="px-topbar-track">
+      <span class="px-topbar-msg">¡YA ABRIMOS EN LIMA!</span>
+      <span class="px-topbar-msg">DIVERSIÓN PARA TODA LA FAMILIA</span>
+      <span class="px-topbar-msg">100% INMERSIVO</span>
+      <span class="px-topbar-msg">JUEGOS ILIMITADOS</span>
+      <span class="px-topbar-msg">RETOS Y PREMIOS</span>
+      <span class="px-topbar-msg">PRÓXIMAMENTE EN CHILE Y COLOMBIA</span>
+      <!-- Repetición para bucle infinito sin saltos -->
+      <span class="px-topbar-msg">¡YA ABRIMOS EN LIMA!</span>
+      <span class="px-topbar-msg">DIVERSIÓN PARA TODA LA FAMILIA</span>
+      <span class="px-topbar-msg">100% INMERSIVO</span>
+      <span class="px-topbar-msg">JUEGOS ILIMITADOS</span>
+      <span class="px-topbar-msg">RETOS Y PREMIOS</span>
+      <span class="px-topbar-msg">PRÓXIMAMENTE EN CHILE Y COLOMBIA</span>
+    </div>
+  </div>
+
+  <!-- Header Oficial -->
+  <header class="px-header">
+    <div class="px-header-inner">
+      <a href="/" class="px-logo" title="Paradox Park">
+        <img src="/assets/logo.png" alt="Paradox Park Logo" />
+      </a>
+
+      <nav class="px-nav">
+        <a href="https://paradoxparks.com/las-eras" target="_blank" rel="noopener">Nuestras Eras</a>
+        <a href="https://paradoxparks.com/grupos" target="_blank" rel="noopener">Grupos</a>
+        <a href="https://paradoxparks.com/info-y-soporte" target="_blank" rel="noopener">Info y Soporte</a>
+      </nav>
+
+      <div class="px-header-right">
+        <a class="px-btn px-btn-primary" href="https://paradoxparks.com/era/era-imperium-lima#comprar" target="_blank" rel="noopener">
+          ENTRADAS
+        </a>
+        <button class="px-burger" id="pxBurger" aria-label="Abrir Menú">
+          <i class="fa fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Menú Móvil Lateral -->
+  <div class="px-overlay" id="pxOverlay"></div>
+  <nav class="px-mobile-menu" id="pxMobileMenu">
+    <button class="px-mobile-close" id="pxMobileClose" aria-label="Cerrar">&times;</button>
+    <a href="https://paradoxparks.com/las-eras" target="_blank" rel="noopener">Nuestras Eras</a>
+    <a href="https://paradoxparks.com/grupos" target="_blank" rel="noopener">Grupos</a>
+    <a href="https://paradoxparks.com/info-y-soporte" target="_blank" rel="noopener">Info y Soporte</a>
+    <a href="https://paradoxparks.com/era/era-imperium-lima#comprar" target="_blank" rel="noopener" style="color:var(--px-secondary);">
+      ENTRADAS
+    </a>
+  </nav>
+
+  <!-- Contenido Central: Formulario de Consentimiento y Registro -->
+  <main class="px-main-section">
+
+    <!-- Banner de Advertencia Importante -->
+    <div class="px-alert-important">
+      <i class="fa fa-exclamation-triangle"></i>
+      <div>
+        <strong>IMPORTANTE</strong><br />
+        Algunas atracciones requieren que aceptes un consentimiento antes del ingreso.
+      </div>
+    </div>
+
+    <!-- TARJETA DEL FORMULARIO DE CONSENTIMIENTO -->
+    <div class="px-form-card" id="formCard">
+      <!-- Cabecera del formulario con logo y título -->
+      <div class="px-form-header">
+        <img src="/assets/logo.png" alt="Paradox Park" />
+        <div>
+          <h1>ACUERDO DE CONSENTIMIENTO Y REGISTRO</h1>
+          <p>PARADOX PARK &bull; ERA IMPERIUM LIMA</p>
+        </div>
+      </div>
+
+      <div class="px-form-body">
+        <!-- Buscador para visitantes que ya han asistido antes (Opcional) -->
+        <div class="px-lookup-box" id="lookupBox">
+          <h3><i class="fa fa-id-card"></i> ¿Ya nos has visitado antes?</h3>
+          <p>Si ya te has registrado antes, ingresa tu documento para cargar tus datos automáticamente.</p>
+          <div class="px-lookup-row">
+            <select id="lookupTipo" class="px-select">
+              <option value="dni">DNI</option>
+              <option value="ce">Carnet de Extranjería</option>
+              <option value="pasaporte">Pasaporte</option>
+              <option value="cc">Cédula de Ciudadanía</option>
+            </select>
+            <input type="text" id="lookupDoc" class="px-input" placeholder="Ingresa tu documento" maxlength="20" />
+            <button type="button" id="btnLookup" class="px-btn px-btn-primary">
+              <i class="fa fa-search"></i> Buscar
+            </button>
+          </div>
+          <div id="lookupMsg" style="margin-top: 10px; font-size: 13.5px; display: none;"></div>
+        </div>
+
+        <!-- FORMULARIO PRINCIPAL -->
+        <form id="disclaimerForm">
+
+          <!-- 1. Nombre y Apellidos del Adulto Responsable -->
+          <div class="px-field-group">
+            <label class="px-field-label" for="nombreCompleto">
+              <i class="fa fa-user" style="color:var(--px-accent); margin-right:4px;"></i>
+              Nombre y Apellido del adulto responsable <span class="req">*</span>
+            </label>
+            <input type="text" id="nombreCompleto" class="px-input" placeholder="Nombres y Apellidos completos" required />
+          </div>
+
+          <!-- 2. Correo Electrónico -->
+          <div class="px-field-group">
+            <label class="px-field-label" for="correo">
+              <i class="fa fa-envelope" style="color:var(--px-accent); margin-right:4px;"></i>
+              Correo electrónico <span class="req">*</span>
+            </label>
+            <input type="email" id="correo" class="px-input" placeholder="ejemplo@correo.com" required />
+            <span class="px-hint-text">Aquí recibirás tu constancia y el acuerdo firmado en PDF.</span>
+          </div>
+
+          <!-- 3. Documento de Identidad (Tipo y Número) -->
+          <div class="px-field-group">
+            <label class="px-field-label">
+              <i class="fa fa-id-card" style="color:var(--px-accent); margin-right:4px;"></i>
+              Documento de Identidad <span class="req">*</span>
+            </label>
+            <div class="px-row-doc">
+              <select id="tipoDocumento" class="px-select" required>
+                <option value="dni">DNI</option>
+                <option value="ce">Carnet de Extranjería</option>
+                <option value="pasaporte">Pasaporte</option>
+                <option value="cc">Cédula de Ciudadanía</option>
+                <option value="otro">Otro documento</option>
+              </select>
+              <input type="text" id="numDocumento" class="px-input" placeholder="Número de documento" maxlength="20" required />
+            </div>
+          </div>
+
+          <!-- 4. Teléfono y Edad en 2 Columnas -->
+          <div class="px-row-2">
+            <div class="px-field-group">
+              <label class="px-field-label" for="telefono">
+                <i class="fa fa-phone" style="color:var(--px-accent); margin-right:4px;"></i>
+                Teléfono / WhatsApp
+              </label>
+              <input type="tel" id="telefono" class="px-input" placeholder="+51 987 654 321" />
+            </div>
+
+            <div class="px-field-group">
+              <label class="px-field-label" for="edadTitular">
+                <i class="fa fa-birthday-cake" style="color:var(--px-accent); margin-right:4px;"></i>
+                Edad del titular o apoderado <span class="req">*</span>
+              </label>
+              <input type="number" id="edadTitular" class="px-input" min="18" max="120" placeholder="Ej: 28" required />
+              <span class="px-hint-text">Debes ser mayor de edad (18+) para firmar.</span>
+            </div>
+          </div>
+
+          <!-- 5. Distrito / Ciudad -->
+          <div class="px-field-group">
+            <label class="px-field-label" for="distrito">
+              <i class="fa fa-map-marker-alt" style="color:var(--px-accent); margin-right:4px;"></i>
+              Distrito o Ciudad de residencia
+            </label>
+            <input type="text" id="distrito" class="px-input" placeholder="Ej: Miraflores, Lima" />
+          </div>
+
+          <!-- Checkbox de Contacto / Promociones -->
+          <label class="px-checkbox-label">
+            <input type="checkbox" id="aceptoPublicidad" checked />
+            <span>Acepto ser contactado para recibir información exclusiva y promociones de Paradox Park.</span>
+          </label>
+
+          <!-- 6. SECCIÓN DINÁMICA DE MENORES A CARGO -->
+          <div class="px-menores-wrapper">
+            <div class="px-menores-header">
+              <h4><i class="fa fa-child"></i> Menores de edad acompañantes</h4>
+            </div>
+            <p style="font-size: 13.5px; color: var(--px-text-muted); margin-bottom: 16px;">
+              Si asistes con niños o adolescentes a tu cargo, regístralos aquí. La edad se calcula automáticamente con la fecha de nacimiento.
+            </p>
+
+            <div id="menoresContainer"></div>
+
+            <button type="button" id="btnAddMenor" class="px-add-menor-btn">
+              <i class="fa fa-plus-circle"></i> Agregar acompañante menor
+            </button>
+          </div>
+
+          <!-- 7. ANTECEDENTES MÉDICOS O CONDICIONES FÍSICAS -->
+          <div class="px-field-group" style="background:#13131a; padding:18px; border-radius:14px; border:1px solid rgba(255,255,255,0.08);">
+            <label class="px-field-label" style="margin-bottom:10px;">
+              <i class="fa fa-heartbeat" style="color:var(--px-accent); margin-right:4px;"></i>
+              ¿Usted o alguno de sus acompañantes presenta algún antecedente médico o condición de salud relevante?
+            </label>
+            <div style="display:flex; gap:24px; margin-bottom:12px;">
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:14.5px;">
+                <input type="radio" name="antecedentes_medicos" value="NO" checked />
+                <span>NO</span>
+              </label>
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:14.5px;">
+                <input type="radio" name="antecedentes_medicos" value="SI" />
+                <span>SÍ</span>
+              </label>
+            </div>
+            <div id="antDetalleGroup" style="display:none; margin-top:10px;">
+              <label class="px-field-label" style="font-size:12px;">Por favor especifique brevemente la condición o cuidado requerido:</label>
+              <textarea id="antecedenteDetalle" class="px-textarea" placeholder="Ej: Condición cardíaca, lesión articular, etc."></textarea>
+            </div>
+          </div>
+
+          <!-- 8. ACEPTACIÓN DE TÉRMINOS Y CONDICIONES (OBLIGATORIO) -->
+          <label class="px-checkbox-label">
+            <input type="checkbox" id="aceptoTerminos" required />
+            <span>
+              He leído y acepto los <a href="#" class="open-tc-modal">Términos y Condiciones Generales</a> y el reglamento de seguridad de Paradox Park (Era Imperium). <span class="req">*</span>
+            </span>
+          </label>
+
+          <!-- 9. FIRMA DIGITAL (CANVAS) -->
+          <div class="px-signature-box">
+            <label class="px-field-label">
+              <i class="fa fa-pen-nib" style="color:var(--px-accent); margin-right:4px;"></i>
+              Firma digital del titular o apoderado <span class="req">*</span>
+            </label>
+            <div class="px-signature-container">
+              <canvas id="signaturePad"></canvas>
+              <div class="px-signature-hint">Dibuja tu firma en este recuadro usando tu dedo o mouse</div>
+            </div>
+            <div class="px-sig-controls">
+              <span style="font-size:12px; color:rgba(255,255,255,0.5);">Esta firma digital tiene validez y aceptación conforme a ley.</span>
+              <button type="button" id="btnClearSig" class="px-btn-clear">
+                <i class="fa fa-eraser"></i> Limpiar firma
+              </button>
+            </div>
+          </div>
+
+          <!-- 10. BOTÓN DE ENVÍO -->
+          <button type="submit" id="submitBtn" class="px-submit-btn">
+            <span class="px-spinner" id="submitSpinner" style="display:none;"></span>
+            <span id="submitBtnText">Confirmar y Enviar Registro</span>
+            <i class="fa fa-paper-plane"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- PANTALLA DE CONFIRMACIÓN POST-ENVÍO (Réplica idéntica de la referencia) -->
+    <div class="px-success-view" id="successView">
+      <div class="px-success-logo">
+        <img src="/assets/logo.png" alt="Paradox Park" />
+      </div>
+
+      <div class="px-success-title">
+        Tu formulario ha sido enviado correctamente, <strong id="successUserName">Visitante</strong>.
+      </div>
+
+      <div class="px-success-desc">
+        Los datos de tu visita a nuestra sede en <strong id="successSede">Lima - Era Imperium</strong> han sido registrados.
+      </div>
+
+      <div class="px-success-email-note">
+        Hemos enviado la ficha de Responsabilidad y consentimiento firmado a <strong id="successUserEmail">tu correo</strong>.
+      </div>
+
+      <!-- Tarjeta Verde Destacada para Acceso en Puerta -->
+      <div class="px-success-badge-card">
+        <i class="fa fa-mobile-alt"></i>
+        <span>Muestra esta pantalla a uno de nuestros guardianes del portal para que puedas ingresar.</span>
+      </div>
+
+      <div style="margin-top: 30px;">
+        <button type="button" id="btnNewAgreement" class="px-btn-new-agreement">
+          <i class="fa fa-redo"></i> Completar un nuevo Acuerdo
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL DE TÉRMINOS Y CONDICIONES (18 Artículos Oficiales de Paradox Park) -->
+  <div class="px-modal" id="terminosModal">
+    <div class="px-modal-content">
+      <div class="px-modal-header">
+        <h2>Términos y Condiciones Generales — Paradox Park</h2>
+        <button type="button" class="px-modal-close close-tc-modal">&times;</button>
+      </div>
+      <div class="px-modal-body" id="modalTerminosBody">
+        <!-- Poblado dinámicamente con los 18 artículos de terminos-data.js -->
+      </div>
+      <div class="px-modal-footer">
+        <button type="button" class="px-btn px-btn-primary close-tc-modal">Entendido y Conforme</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER OFICIAL PARADOX PARK (Blanco con barra inferior Cyan) -->
+  <footer class="px-footer">
+    <div class="px-footer-grid">
+      <!-- Columna 1: Logo, Bio, Redes -->
+      <div>
+        <div class="px-footer-logo">
+          <img src="/assets/logo.png" alt="Paradox Park" />
+        </div>
+        <p>El parque de experiencias inmersivas más grande de Latinoamérica.</p>
+        <div class="px-socials">
+          <a href="https://www.facebook.com/profile.php?id=61589272274945" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+          <a href="https://www.instagram.com/paradoxparkpe" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.youtube.com/@ParadoxPark-Perú" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+          <a href="https://www.tiktok.com/@paradoxparkpe" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+        </div>
+      </div>
+
+      <!-- Columna 2: Paradox Park -->
+      <div>
+        <h4>Paradox Park</h4>
+        <ul>
+          <li><a href="https://paradoxparks.com/" target="_blank" rel="noopener">Inicio</a></li>
+          <li><a href="https://paradoxparks.com/las-eras" target="_blank" rel="noopener">Nuestras Eras</a></li>
+          <li><a href="https://paradoxparks.com/grupos" target="_blank" rel="noopener">Grupos</a></li>
+          <li><a href="https://paradoxparks.com/info-y-soporte" target="_blank" rel="noopener">Info y Soporte</a></li>
+        </ul>
+      </div>
+
+      <!-- Columna 3: Experiencia -->
+      <div>
+        <h4>Experiencia</h4>
+        <ul>
+          <li><a href="https://paradoxparks.com/info/areas-de-descanso" target="_blank" rel="noopener">Áreas de Descanso</a></li>
+          <li><a href="https://paradoxparks.com/info/accesibilidad" target="_blank" rel="noopener">Accesibilidad e Inclusión</a></li>
+          <li><a href="https://paradoxparks.com/info/seguridad" target="_blank" rel="noopener">Tu Seguridad, Nuestra Prioridad</a></li>
+          <li><a href="https://paradoxparks.com/info/sabores-de-otra-dimension" target="_blank" rel="noopener">Sabores de Otra Dimensión</a></li>
+          <li><a href="#" class="open-tc-modal">Términos y condiciones</a></li>
+          <li><a href="https://paradoxparks.com/libro-de-reclamaciones" target="_blank" rel="noopener">Libro de Reclamaciones</a></li>
+        </ul>
+      </div>
+
+      <!-- Columna 4: Contáctanos -->
+      <div>
+        <h4>Contáctanos</h4>
+        <ul class="px-contact">
+          <li>
+            <a href="https://api.whatsapp.com/send?phone=51922997225" target="_blank" rel="noopener">
+              <i class="fab fa-whatsapp"></i> <strong>WhatsApp:</strong> <span>+51 922 997 225</span>
+            </a>
+          </li>
+          <li>
+            <a href="mailto:hola@paradox-park.com">
+              <i class="fa fa-envelope"></i> <strong>Email:</strong> <span>hola@paradox-park.com</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Cintillo Inferior Cyan -->
+    <div class="px-copy">
+      &copy; 2026 Paradox Park. Todos los derechos reservados.
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+  <script src="/js/terminos-data.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
